@@ -56,7 +56,6 @@ class ShopTripManager:
         print(f"{customer.name} has {customer.money} dollars")
         lowest_cost = math.inf
         cheapest_shop = None
-        cost = 0
         for shop in shops:
             cost = self.calculate_total_cost(customer, shop)
             print(f"{customer.name}'s trip to the {shop.name} "
@@ -64,21 +63,21 @@ class ShopTripManager:
             if cost < lowest_cost:
                 lowest_cost = cost
                 cheapest_shop = shop
-        if customer.money >= cost:
+        if customer.money >= lowest_cost:
             return cheapest_shop
         print(f"{customer.name} doesn't have enough money "
               f"to make a purchase in any shop")
         return None
 
     def do_shopping(self, customer: Customer, shop: Shop) -> None:
-        print(f"Date: {datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")}")
+        current_date = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        print(f"Date: {current_date}")
         print(f"Thanks, {customer.name}, for your purchase!")
         print("You have bought:")
         total_cost = self.calculate_shop_cost(customer, shop)
         customer.money -= total_cost
         for product, price in shop.products.items():
-            quantity = customer.product_cart[product]
+            quantity = customer.product_cart.get(product, 0)
             print(f"{quantity} {product}s for{(price * quantity): g} dollars")
-            del customer.product_cart[product]
         print(f"Total cost is {total_cost} dollars")
         print("See you again!")
